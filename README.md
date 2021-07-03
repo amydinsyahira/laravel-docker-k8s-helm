@@ -21,7 +21,8 @@ Open a terminal, and navigate to the directory containing your project. Run the 
 ```shell script
 $ docker-compose pull # Download the latest versions of the pre-built images.
 $ docker-compose run --rm setup # Setup project (first time only).
-$ docker-compose up -d # Running in detached mode
+$ docker-compose up -d # Running in detached local mode
+$ docker-compose -f docker-compose.yaml -f docker-compose.production.yaml up -d # Running in detached production mode
 ```
 
 This starts the following services:
