@@ -1,0 +1,16 @@
+version: '3.4'
+
+x-build:
+  - &build-args
+    APP_ENV: 'production'
+    APP_DEBUG: 'false'
+  - &build-cache
+    - ${IMAGE:-amydinsyahira/laravel-docker-k8s-helm}:production
+
+services:
+  fpm:
+    image: ${IMAGE:-amydinsyahira/laravel-docker-k8s-helm}:production
+    build:
+      cache_from: *build-cache
+      args:
+        << : *build-args

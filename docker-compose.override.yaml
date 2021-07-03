@@ -1,0 +1,35 @@
+version: '3.4'
+
+x-build:
+  - &build-args
+    APP_ENV: 'local'
+    APP_DEBUG: 'true'
+  - &build-cache
+    - ${IMAGE:-amydinsyahira/laravel-docker-k8s-helm}:local
+
+services:
+  setup:
+    image: ${IMAGE:-amydinsyahira/laravel-docker-k8s-helm}:local
+    command: ['setup']
+    build:
+      context: .
+      dockerfile: ./docker/fpm/Dockerfile
+      cache_from: *build-cache
+      args:
+        << : *build-args
+    volumes:
+      - ./laravel:/laravel
+
+  fpm:
+    image: ${IMAGE:-amydinsyahira/laravel-docker-k8s-helm}:local
+    build:
+      cache_from: *build-cache
+      args:
+        << : *build-args
+    volumes:
+      - ./laravel:/laravel
+
+  nginx:
+    volumes:
+      - ./laravel/public:/laravel/public
+      - ./docker/nginx/default.conf:/opt/bitnami/nginx/conf/server_blocks/default.conf:ro

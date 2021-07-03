@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  fpm:
+    command: ['fpm']
+    build:
+      context: .
+      dockerfile: ./docker/fpm/Dockerfile
+    healthcheck:
+      test: ['CMD', 'docker-healthcheck', 'fpm']
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    network_mode: service:nginx
+
+  nginx:
+    image: bitnami/nginx
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/status']
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    ports:
+    - target: 8080
+      published: 80
+      protocol: tcp
